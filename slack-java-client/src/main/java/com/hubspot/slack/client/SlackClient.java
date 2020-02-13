@@ -38,6 +38,7 @@ import com.hubspot.slack.client.methods.params.files.FilesUploadParams;
 import com.hubspot.slack.client.methods.params.group.GroupsKickParams;
 import com.hubspot.slack.client.methods.params.group.GroupsListParams;
 import com.hubspot.slack.client.methods.params.im.ImOpenParams;
+import com.hubspot.slack.client.methods.params.oauth.OauthAccessParams;
 import com.hubspot.slack.client.methods.params.reactions.ReactionsAddParams;
 import com.hubspot.slack.client.methods.params.search.SearchMessagesParams;
 import com.hubspot.slack.client.methods.params.usergroups.UsergroupCreateParams;
@@ -52,6 +53,7 @@ import com.hubspot.slack.client.methods.params.users.UsersListParams;
 import com.hubspot.slack.client.methods.params.views.OpenViewParams;
 import com.hubspot.slack.client.methods.params.views.PublishViewParams;
 import com.hubspot.slack.client.methods.params.views.UpdateViewParams;
+import com.hubspot.slack.client.models.APIVersion;
 import com.hubspot.slack.client.models.LiteMessage;
 import com.hubspot.slack.client.models.SlackChannel;
 import com.hubspot.slack.client.models.conversations.Conversation;
@@ -82,6 +84,7 @@ import com.hubspot.slack.client.models.response.files.FilesSharedPublicUrlRespon
 import com.hubspot.slack.client.models.response.files.FilesUploadResponse;
 import com.hubspot.slack.client.models.response.group.GroupsKickResponse;
 import com.hubspot.slack.client.models.response.im.ImOpenResponse;
+import com.hubspot.slack.client.models.response.oauth.OauthAccessResponse;
 import com.hubspot.slack.client.models.response.reactions.AddReactionResponse;
 import com.hubspot.slack.client.models.response.search.SearchMessageResponse;
 import com.hubspot.slack.client.models.response.team.TeamInfoResponse;
@@ -226,4 +229,9 @@ public interface SlackClient extends Closeable {
       Object params,
       Class<T> returnClazz
   );
+
+  //oauth
+  // TODO
+  CompletableFuture<Result<OauthAccessResponse, SlackError>> oauthAccess(OauthAccessParams params);
+//  CompletableFuture<Result<ModalViewCommandResponse, SlackError>> oauthToken(OpenViewParams params);
 }

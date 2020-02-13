@@ -110,6 +110,7 @@ public enum SlackMethods implements SlackMethod {
   mpim_replies(MethodWriteMode.READ, RateLimitingTiers.TIER_2, JsonStatus.FORM_ENCODING_ONLY),
 
   oauth_access(MethodWriteMode.WRITE, RateLimitingTiers.TIER_4, JsonStatus.FORM_ENCODING_ONLY),
+  oauth_v2_access(MethodWriteMode.WRITE, RateLimitingTiers.TIER_4, JsonStatus.FORM_ENCODING_ONLY, false),
   oauth_token(MethodWriteMode.WRITE, RateLimitingTiers.TIER_4, JsonStatus.FORM_ENCODING_ONLY),
 
   pins_add(MethodWriteMode.WRITE, RateLimitingTiers.TIER_2, JsonStatus.ACCEPTS_JSON),
@@ -178,6 +179,7 @@ public enum SlackMethods implements SlackMethod {
   private final MethodWriteMode writeMode;
   private final RateLimitingTier rateLimitingTier;
   private final JsonStatus jsonStatus;
+  private final Boolean needsToken;
 
   SlackMethods(
       MethodWriteMode writeMode,
@@ -187,6 +189,19 @@ public enum SlackMethods implements SlackMethod {
     this.writeMode = writeMode;
     this.rateLimitingTier = rateLimitingTier;
     this.jsonStatus = jsonStatus;
+    this.needsToken = true;
+  }
+
+  SlackMethods(
+          MethodWriteMode writeMode,
+          RateLimitingTier rateLimitingTier,
+          JsonStatus jsonStatus,
+          Boolean needsToken
+  ) {
+    this.writeMode = writeMode;
+    this.rateLimitingTier = rateLimitingTier;
+    this.jsonStatus = jsonStatus;
+    this.needsToken = false;
   }
 
   @Override
@@ -208,4 +223,8 @@ public enum SlackMethods implements SlackMethod {
   public RateLimitingTier getRateLimitingTier() {
     return rateLimitingTier;
   }
+
+  @Override
+  public Boolean needsToken() {  return needsToken; }
+
 }

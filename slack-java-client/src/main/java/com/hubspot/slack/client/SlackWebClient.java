@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.hubspot.slack.client.methods.params.oauth.OauthAccessParams;
+import com.hubspot.slack.client.models.response.oauth.OauthAccessResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1029,6 +1031,17 @@ public class SlackWebClient implements SlackClient {
     );
   }
 
+  //TODO I don't think this is the cleanest way to support multiple versions?
+  @Override
+  public CompletableFuture<Result<OauthAccessResponse, SlackError>> oauthAccess(OauthAccessParams params) {
+    switch (this.config.getAPIVersion()) {
+      case V2:
+        return postSlackCommand(SlackMethods.oauth_v2_access, params, OauthAccessResponse.class);
+      default:
+        return postSlackCommand(SlackMethods.oauth_access, params, OauthAccessResponse.class);
+    }
+  }
+
   private <T extends SlackResponse> CompletableFuture<Result<T, SlackError>> postSlackCommandJsonEncoded(
       SlackMethod method,
       Object params,
@@ -1109,7 +1122,11 @@ public class SlackWebClient implements SlackClient {
         .setContentType(ContentType.FORM);
     params.entries()
         .forEach(param -> requestBuilder.setFormParam(param.getKey()).to(param.getValue()));
-    requestBuilder.setQueryParam("token").to(config.getTokenSupplier().get());
+
+    if(method.needsToken()) {
+      requestBuilder.setQueryParam("token").to(config.getTokenSupplier().get());
+    }
+
     return executeLoggedAs(method, requestBuilder.build(), responseType);
   }
 

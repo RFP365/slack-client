@@ -8,6 +8,7 @@ import org.immutables.value.Value.Immutable;
 
 import com.hubspot.horizon.HttpConfig;
 import com.hubspot.immutables.style.HubSpotStyle;
+import com.hubspot.slack.client.models.APIVersion;
 import com.hubspot.slack.client.interceptors.calls.SlackMethodAcceptor;
 import com.hubspot.slack.client.interceptors.http.RequestDebugger;
 import com.hubspot.slack.client.interceptors.http.ResponseDebugger;
@@ -18,6 +19,9 @@ import com.hubspot.slack.client.ratelimiting.SlackRateLimiter;
 @HubSpotStyle
 public interface SlackClientRuntimeConfigIF {
   Supplier<String> getTokenSupplier();
+
+  @Default
+  default APIVersion getAPIVersion() { return APIVersion.V1; }
 
   @Default
   default Supplier<String> getSlackApiBasePath() {
